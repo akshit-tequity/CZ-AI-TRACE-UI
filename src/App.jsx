@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import ChatWindow from "./components/ChatWindow";
+import Login from "./components/Login";
 import { getRuns, groupRunsByPhone } from "./api";
 import styles from "./App.module.css";
 
 export default function App() {
+  const [authed, setAuthed] = useState(false);
   const [contacts, setContacts] = useState([]);
   const [selectedPhone, setSelectedPhone] = useState(null);
   const [showChat, setShowChat] = useState(false);
@@ -12,6 +14,7 @@ export default function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!authed) return;
     async function load() {
       try {
         setLoading(true);
@@ -26,7 +29,9 @@ export default function App() {
       }
     }
     load();
-  }, []);
+  }, [authed]);
+
+  if (!authed) return <Login onLogin={() => setAuthed(true)} />;
 
   const selectedContact = contacts.find((c) => c.phone === selectedPhone) || null;
 
