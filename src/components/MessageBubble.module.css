@@ -1,0 +1,103 @@
+.row {
+  display: flex;
+  margin-bottom: 2px;
+}
+
+.rowUser {
+  justify-content: flex-end;
+}
+
+.rowBot {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 65%;
+  padding: 7px 10px 5px 10px;
+  border-radius: 8px;
+  position: relative;
+  word-wrap: break-word;
+  box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
+}
+
+/* User bubble (green, right) */
+.bubbleUser {
+  background: #d9fdd3;
+  border-radius: 8px 0 8px 8px;
+}
+
+/* Bot bubble (white, left) */
+.bubbleBot {
+  background: #fff;
+  border-radius: 0 8px 8px 8px;
+}
+
+.text {
+  font-size: 14.2px;
+  color: #111b21;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  font-weight: 400;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.button {
+  background: #f0f2f5;
+  border: 1px solid #e9edef;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  color: #008069;
+  cursor: default;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.agentBadge {
+  font-size: 10px;
+  background: #e9edef;
+  color: #54656f;
+  border-radius: 10px;
+  padding: 1px 6px;
+  text-transform: capitalize;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  margin-right: 2px;
+}
+
+.processingTime {
+  font-size: 10px;
+  color: #8696a0;
+  margin-right: 2px;
+}
+
+.time {
+  font-size: 11px;
+  color: #8696a0;
+  white-space: nowrap;
+}
+
+.tick {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .bubble {
+    max-width: 85%;
+  }
+}
