@@ -94,10 +94,28 @@
 }
 
 .loadingMsg {
-  padding: 24px 16px;
+  padding: 16px;
   text-align: center;
   color: #8696a0;
-  font-size: 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #d1d7db;
+  border-top-color: #00a884;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .contactItem {
