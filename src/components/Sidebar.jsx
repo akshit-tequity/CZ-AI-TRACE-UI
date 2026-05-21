@@ -3,14 +3,45 @@ import Avatar from "./Avatar";
 import { formatSidebarTime } from "../utils";
 import styles from "./Sidebar.module.css";
 
-export default function Sidebar({ contacts, selectedPhone, onSelect, loading, mobileHidden }) {
+// Trigger the next-page fetch when the user is within this many pixels of
+// the bottom of the contact list. Small enough that it feels intentional,
+// large enough that fast scrollers don't have to actually hit the floor.
+const SCROLL_LOAD_THRESHOLD_PX = 200;
+
+export default function Sidebar({
+  contacts,
+  selectedPhone,
+  onSelect,
+  loading,
+  loadingMore,
+  hasMore,
+  retryInSeconds = 0,
+  onLoadMore,
+  mobileHidden,
+}) {
   const [search, setSearch] = useState("");
+  const throttled = retryInSeconds > 0;
 
   const filtered = contacts.filter((c) => {
     const q = search.toLowerCase();
     const name = (c.userName || c.phone).toLowerCase();
     return name.includes(q) || c.phone.includes(q);
   });
+
+  // Infinite scroll — when the user nears the bottom of the contact list,
+  // ask App to fetch the next 100 traces. Disabled while:
+  //   - the initial load is still running
+  //   - a fetch is already in flight
+  //   - we're cooling down from a 429 (countdown active)
+  //   - the user is searching (filter operates on already-loaded contacts)
+  //   - LangSmith returned an empty page (hasMore=false)
+  const handleScroll = (e) => {
+    if (!hasMore || loadingMore || loading || throttled || search) return;
+    const el = e.currentTarget;
+    if (el.scrollHeight - el.scrollTop - el.clientHeight < SCROLL_LOAD_THRESHOLD_PX) {
+      onLoadMore?.();
+    }
+  };
 
   return (
     <div className={`${styles.sidebar} ${mobileHidden ? styles.mobileHidden : ""}`}>
@@ -42,7 +73,7 @@ export default function Sidebar({ contacts, selectedPhone, onSelect, loading, mo
       </div>
 
       {/* Contact List */}
-      <div className={styles.list}>
+      <div className={styles.list} onScroll={handleScroll}>
         {loading && (
           <div className={styles.loadingMsg}>Loading conversations…</div>
         )}
@@ -57,6 +88,20 @@ export default function Sidebar({ contacts, selectedPhone, onSelect, loading, mo
             onClick={() => onSelect(contact.phone)}
           />
         ))}
+        {!loading && loadingMore && (
+          <div className={styles.loadingMsg}>
+            <span className={styles.spinner} aria-hidden="true" />
+            Loading more…
+          </div>
+        )}
+        {!loading && !loadingMore && throttled && (
+          <div className={styles.loadingMsg}>
+            Rate limited by LangSmith — retrying in {retryInSeconds}s…
+          </div>
+        )}
+        {!loading && !loadingMore && !throttled && !hasMore && filtered.length > 0 && (
+          <div className={styles.loadingMsg}>End of conversations</div>
+        )}
       </div>
     </div>
   );
