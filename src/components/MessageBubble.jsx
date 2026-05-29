@@ -30,6 +30,13 @@ export default function MessageBubble({ message }) {
 
         {/* Footer: agent type badge + time + tick */}
         <div className={styles.footer}>
+          {!isUser && message.isTemplate && (
+            // Small "TEMPLATE" badge distinguishes a system-fired Meta
+            // template send (from the api-server) from an LLM agent
+            // reply. Same slot order as `agentType` so reviewers see
+            // origin first when scanning a long thread.
+            <span className={styles.templateBadge}>TEMPLATE</span>
+          )}
           {!isUser && message.agentType && (
             <span className={styles.agentBadge}>{message.agentType}</span>
           )}

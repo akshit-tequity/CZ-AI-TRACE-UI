@@ -79,6 +79,22 @@
   margin-right: 2px;
 }
 
+/* "TEMPLATE" badge — distinguishes a system-fired Meta template send
+ * (from the api-server's WhatsAppService.sendTemplate / sendMessage)
+ * from an LLM agent reply that lives on an agent_turn run. Colored
+ * green-ish so it visually echoes the bot-bubble origin without
+ * fighting with the agent-type badge sitting next to it. */
+.templateBadge {
+  font-size: 10px;
+  background: #d1f4cd;
+  color: #1d4d29;
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+
 .processingTime {
   font-size: 10px;
   color: #8696a0;
