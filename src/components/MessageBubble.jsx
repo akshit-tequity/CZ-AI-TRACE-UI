@@ -2,6 +2,30 @@ import { formatTime } from "../utils";
 import styles from "./MessageBubble.module.css";
 
 export default function MessageBubble({ message }) {
+  // System events (Kafka OCPP events + WhatsApp template sends from the
+  // api-server) get a centred chip rather than a left/right WhatsApp
+  // bubble — they're system actions, not turns in a conversation.
+  if (message.type === "system") {
+    const kindLabel =
+      message.systemKind === "kafka"
+        ? "OCPP"
+        : message.systemKind === "template"
+          ? "template"
+          : "trace";
+    return (
+      <div className={styles.systemRow}>
+        <div className={`${styles.systemPill} ${styles[`systemKind_${message.systemKind || "other"}`] || ""}`}>
+          <span className={styles.systemKindBadge}>{kindLabel}</span>
+          <span className={styles.systemText}>{message.text}</span>
+          {message.detail && (
+            <span className={styles.systemDetail}>· {message.detail}</span>
+          )}
+          <span className={styles.systemTime}>{formatTime(message.time)}</span>
+        </div>
+      </div>
+    );
+  }
+
   const isUser = message.type === "user";
 
   return (
